@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { AppBar, Toolbar, Typography, Button, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog,
+import { AppBar, Toolbar, Typography, Button, Grid, Divider, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog,
     DialogContent, DialogTitle } from '@material-ui/core/';
 
 class App extends Component {
@@ -149,6 +149,10 @@ class App extends Component {
             </Table>
         );
 
+        const h1Style = {
+          marginLeft: "50px"
+        }
+
         return (
             <div>
                 <AppBar position="static">
@@ -158,14 +162,16 @@ class App extends Component {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <h1>oh shit, a button</h1>
-                <Button>HI click me!</Button>
-                <hr/>
-                <br/>
+                <Grid container direction="column">
+                <div className="container">
+                  <h1 style={h1Style}>Usuários</h1>
+                </div>
+                <Divider />
                 <div className="App">
                     {table}
                     {dialog}
                 </div>
+                </Grid>
             </div>
         );
     }

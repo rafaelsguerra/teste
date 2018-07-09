@@ -28,7 +28,11 @@
 }
 
 .container {
-  width: 50%;
+  background-color: #ccc;
+  color: white;
+  height: 150px;
+  vertical-align: middle;
+  font-size: 30px;
 }
 
 .textField {
