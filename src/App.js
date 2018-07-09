@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import { AppBar, Toolbar, Typography, Button, Card, CardContent, Grid, Divider, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog,
-    DialogContent, DialogTitle } from '@material-ui/core/';
+import { AppBar, Toolbar, Typography, Button, Card, CardHeader, Avatar, CardContent, Grid, Divider,
+  TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogContent,
+     DialogTitle } from '@material-ui/core/';
+import Person from '@material-ui/icons/Person/';
+import Home from '@material-ui/icons/Home';
+import Phone from '@material-ui/icons/Phone';
 
 class App extends Component {
 
@@ -169,14 +173,30 @@ class App extends Component {
                 </div>
                 <Divider />
                 <div className="App">
-
+                  <br />
                     <Card className="cardBox">
-                      <CardContent>
-                        <Typography color="textSecondary">Meus dados</Typography>
-                        <Typography color="headline"></Typography>
-                        <Typography color="headline"></Typography>
-                        <Typography color="headline"></Typography>
+                      <CardHeader avatar = {<Avatar>R</Avatar>} title="Rafael Guerra" subheader="Meus dados">
 
+                      </CardHeader>
+                      <CardContent>
+                        <Grid container spacing={8} alignItems="flex-end">
+                          <Grid item><Person /></Grid>
+                          <Grid item>
+                            <TextField name="nome" label="Nome" value="Rafael Guerra" margin="normal" InputProps={{readOnly: true}} />
+                          </Grid>
+                        </Grid>
+                        <Grid container spacing={8} alignItems="flex-end">
+                          <Grid item><Home /></Grid>
+                          <Grid item>
+                            <TextField name="endereco" label="Endereço" value="rua rodrigues alves" margin="normal" InputProps={{readOnly: true}} />
+                          </Grid>
+                        </Grid>
+                        <Grid container spacing={8} alignItems="flex-end">
+                          <Grid item><Phone /></Grid>
+                          <Grid item>
+                            <TextField name="telefone" label="Telefone" value="99851-6547" margin="normal" InputProps={{readOnly: true}} />
+                          </Grid>
+                        </Grid>
                       </CardContent>
                     </Card>
                     {table}
