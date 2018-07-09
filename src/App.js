@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { AppBar, Toolbar, Typography, Button, Grid, Divider, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog,
+import { AppBar, Toolbar, Typography, Button, Card, CardContent, Grid, Divider, TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog,
     DialogContent, DialogTitle } from '@material-ui/core/';
 
 class App extends Component {
@@ -92,7 +92,7 @@ class App extends Component {
     render() {
 
         let dialog = (
-            <Dialog open={this.state.showDialog} onClose={this.handleClose}>
+            <Dialog open={this.state.showDialog} onClose={this.handleClose} contentStyle={{style: "700px", maxWidth: "90%"}}>
                 <DialogTitle>Editar usuário</DialogTitle>
                 <DialogContent>
                     <form action="">
@@ -153,6 +153,7 @@ class App extends Component {
           marginLeft: "50px"
         }
 
+
         return (
             <div>
                 <AppBar position="static">
@@ -164,10 +165,20 @@ class App extends Component {
                 </AppBar>
                 <Grid container direction="column">
                 <div className="container">
-                  <h1 style={h1Style}>Usuários</h1>
+                  <h1 style={h1Style}>Meus dados</h1>
                 </div>
                 <Divider />
                 <div className="App">
+
+                    <Card className="cardBox">
+                      <CardContent>
+                        <Typography color="textSecondary">Meus dados</Typography>
+                        <Typography color="headline"></Typography>
+                        <Typography color="headline"></Typography>
+                        <Typography color="headline"></Typography>
+
+                      </CardContent>
+                    </Card>
                     {table}
                     {dialog}
                 </div>

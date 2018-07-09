@@ -40,3 +40,8 @@
   margin-right: 10px;
   display: block;
 }
+
+.cardBox {
+  max-width: 500px;
+  text-align: left;
+}
