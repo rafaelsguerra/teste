@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import { AppBar, Toolbar, Typography, Button, Card, CardHeader, Avatar, CardContent, Grid, Divider,
-  TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogContent,
-     DialogTitle } from '@material-ui/core/';
-import Person from '@material-ui/icons/Person/';
+    TextField, Table, TableBody, TableCell, TableHead, TableRow, Dialog, DialogContent,
+    DialogTitle } from '@material-ui/core/';
+import Person from '@material-ui/icons/Person';
 import Home from '@material-ui/icons/Home';
 import Phone from '@material-ui/icons/Phone';
+import Email from '@material-ui/icons/Email';
+import Axios from 'axios';
 
 class App extends Component {
 
@@ -38,42 +40,35 @@ class App extends Component {
                 cidade: 'campina grande'
             }
         ],
-        showForm: false,
+        loading: true,
         showDialog: false,
-        activeUser: {}
+        activeUser: Axios.get('http://localhost:3030/users/1').then(response => this.setState({activeUser: response.data, loading: false}))
     };
 
-    inputChangeHandler = (event, id) => {
-        const userIndex = this.state.users.findIndex(u => {
-            return u.id === id;
-        });
+    inputChangeHandler = (event) => {
 
-        const user = {...this.state.users[userIndex]};
+        const user = {...this.state.activeUser};
 
         if (event.target.id === "nome") {
-            user.nome = event.target.value;
+            user.name = event.target.value;
         } else if (event.target.id === "nasc") {
             user.data_nasc = event.target.value;
         } else if (event.target.id === "endereco") {
             user.endereco = event.target.value;
         } else if (event.target.id === "telefone") {
             user.telefone = event.target.value;
-        } else {
+        } else if (event.target.id === "cidade") {
             user.cidade = event.target.value;
+        } else {
+            user.email = event.target.value;
         }
 
-        const users = [...this.state.users];
-        users[userIndex] = user;
-
-        this.setState({users: users});
+        this.setState({activeUser: user});
     };
 
-    dialogHandler = (user) => {
+    dialogHandler = () => {
         this.setState(
-            {
-                showDialog: true,
-                activeUser: user
-            });
+            { showDialog: true });
     };
 
     deleteHandler = (userId) => {
@@ -93,31 +88,60 @@ class App extends Component {
         this.setState({showDialog: false});
     };
 
+    handleSubmit = (event) => {
+        Axios.put('http://localhost:3030/users/1', this.state.activeUser).then(response => {
+            window.alert("Usuario alterado!");
+        });
+    };
+
     render() {
 
         let dialog = (
-            <Dialog open={this.state.showDialog} onClose={this.handleClose} contentStyle={{style: "700px", maxWidth: "90%"}}>
+            <Dialog open={this.state.showDialog} onClose={this.handleClose} contentstyle={{minWidth: "700px", maxWidth: "90%"}}>
                 <DialogTitle>Editar usuário</DialogTitle>
                 <DialogContent>
-                    <form action="">
+                    <form action="" onSubmit={this.handleSubmit}>
                         <TextField type="text"
                                    id="nome"
-                                   placeholder={this.state.activeUser.nome}
+                                   placeholder={this.state.activeUser.name}
                                    label="Nome"
                                    margin="normal"
-                                   onChange={(event) => this.inputChangeHandler(event, this.state.activeUser.id)}/>
+                                   onChange={(event) => this.inputChangeHandler(event)}/>
                         <br/>
+                        {/*<TextField type="text"*/}
+                                   {/*id="nasc"*/}
+                                   {/*placeholder={this.state.activeUser.data_nasc}*/}
+                                   {/*label="Data de nascimento"*/}
+                                   {/*margin="normal"*/}
+                                   {/*onChange={(event) => this.inputChangeHandler(event)}/>*/}
+                        {/*<br/>*/}
+                        {/*<TextField type="text"*/}
+                                   {/*id="endereco"*/}
+                                   {/*placeholder={this.state.activeUser.endereco}*/}
+                                   {/*label="Endereço"*/}
+                                   {/*margin="normal"*/}
+                                   {/*onChange={(event) => this.inputChangeHandler(event)}/>*/}
+                        {/*<br/>*/}
+                        {/*<TextField type="text"*/}
+                                   {/*id="telefone"*/}
+                                   {/*placeholder={this.state.activeUser.telefone}*/}
+                                   {/*label="Telefone"*/}
+                                   {/*margin="normal"*/}
+                                   {/*onChange={(event) => this.inputChangeHandler(event)}/>*/}
+                        {/*<br/>*/}
+                        {/*<TextField type="text"*/}
+                                   {/*id="cidade"*/}
+                                   {/*placeholder={this.state.activeUser.cidade}*/}
+                                   {/*label="Cidade"*/}
+                                   {/*margin="normal"*/}
+                                   {/*onChange={(event) =>this.inputChangeHandler(event)}/>*/}
+                        {/*<br/>*/}
                         <TextField type="text"
-                                   id="nasc"
-                                   label="Data de nascimento"
+                                   id="email"
+                                   placeholder={this.state.activeUser.email}
+                                   label="email"
                                    margin="normal"
-                                   onChange={(event) => this.inputChangeHandler(event, this.state.activeUser.id)}/>
-                        <br/>
-                        <TextField type="text" id="endereco" label="Endereço" margin="normal" onChange={(event) => this.inputChangeHandler(event, this.state.activeUser.id)}/>
-                        <br/>
-                        <TextField type="text" id="telefone" label="Telefone" margin="normal" onChange={(event) => this.inputChangeHandler(event, this.state.activeUser.id)}/>
-                        <br/>
-                        <TextField type="text" id="cidade" label="Cidade" margin="normal" onChange={(event) =>this.inputChangeHandler(event, this.state.activeUser.id)}/>
+                                   onChange={(event) =>this.inputChangeHandler(event)}/>
                         <br/>
                         <Button type="submit">Submeter</Button>
                     </form>
@@ -154,11 +178,15 @@ class App extends Component {
         );
 
         const h1Style = {
-          marginLeft: "50px"
+            marginLeft: "50px"
+        };
+
+        if (this.state.loading) {
+            return null;
         }
 
-
         return (
+
             <div>
                 <AppBar position="static">
                     <Toolbar>
@@ -168,40 +196,64 @@ class App extends Component {
                     </Toolbar>
                 </AppBar>
                 <Grid container direction="column">
-                <div className="container">
-                  <h1 style={h1Style}>Meus dados</h1>
-                </div>
-                <Divider />
-                <div className="App">
-                  <br />
-                    <Card className="cardBox">
-                      <CardHeader avatar = {<Avatar>R</Avatar>} title="Rafael Guerra" subheader="Meus dados">
+                    <div className="container">
+                        <h1 style={h1Style}>Meus dados</h1>
+                    </div>
+                    <Divider />
+                    <div style={{textAlign: "center"}}>
+                        <br />
+                        <div className="cardBox">
+                            <Card>
+                                <CardHeader avatar = {<Avatar>{this.state.activeUser.name[0]}</Avatar>}
+                                            title={this.state.activeUser.name}
+                                            subheader="Meus dados">
+                                </CardHeader>
+                                <CardContent>
+                                    <Grid container spacing={8} alignItems="flex-end">
+                                        <Grid item><Person /></Grid>
+                                        <Grid item>
+                                            <TextField name="nome"
+                                                       label="Nome"
+                                                       fullWidth
+                                                       value={this.state.activeUser.name}
+                                                       margin="normal"
+                                                       InputProps={{readOnly: true}} />
+                                        </Grid>
+                                    </Grid>
+                                    {/*<Grid container spacing={8} alignItems="flex-end">*/}
+                                        {/*<Grid item><Home /></Grid>*/}
+                                        {/*<Grid item>*/}
+                                            {/*<TextField name="endereco" label="Endereço" fullWidth value={this.state.activeUser.endereco} margin="normal" InputProps={{readOnly: true}} />*/}
+                                        {/*</Grid>*/}
+                                    {/*</Grid>*/}
+                                    {/*<Grid container spacing={8} alignItems="flex-end">*/}
+                                        {/*<Grid item><Phone /></Grid>*/}
+                                        {/*<Grid item>*/}
+                                            {/*<TextField name="telefone" label="Telefone" fullWidth value={this.state.activeUser.telefone} margin="normal" InputProps={{readOnly: true}} />*/}
+                                        {/*</Grid>*/}
+                                    {/*</Grid>*/}
+                                    <Grid container spacing={8} alignItems="flex-end">
+                                        <Grid item><Email /></Grid>
+                                        <Grid item>
+                                            <TextField name="email"
+                                                       label="email"
+                                                       fullWidth
+                                                       value={this.state.activeUser.email}
+                                                       margin="normal"
+                                                       InputProps={{readOnly: true}} />
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                            <br/>
+                            <div style={{textAlign: "right"}}>
+                                <Button variant="contained" color="primary" onClick={() =>this.dialogHandler()}>Editar</Button>
+                            </div>
 
-                      </CardHeader>
-                      <CardContent>
-                        <Grid container spacing={8} alignItems="flex-end">
-                          <Grid item><Person /></Grid>
-                          <Grid item>
-                            <TextField name="nome" label="Nome" value="Rafael Guerra" margin="normal" InputProps={{readOnly: true}} />
-                          </Grid>
-                        </Grid>
-                        <Grid container spacing={8} alignItems="flex-end">
-                          <Grid item><Home /></Grid>
-                          <Grid item>
-                            <TextField name="endereco" label="Endereço" value="rua rodrigues alves" margin="normal" InputProps={{readOnly: true}} />
-                          </Grid>
-                        </Grid>
-                        <Grid container spacing={8} alignItems="flex-end">
-                          <Grid item><Phone /></Grid>
-                          <Grid item>
-                            <TextField name="telefone" label="Telefone" value="99851-6547" margin="normal" InputProps={{readOnly: true}} />
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                    {table}
-                    {dialog}
-                </div>
+                        </div>
+                        {/*{table}*/}
+                        {dialog}
+                    </div>
                 </Grid>
             </div>
         );
